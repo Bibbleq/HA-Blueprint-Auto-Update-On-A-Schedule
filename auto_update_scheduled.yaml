@@ -1732,8 +1732,8 @@ action:
                 current_installed_version: "{{ state_attr(current_update_entity, 'installed_version') | default('0.0.0') }}"
                 current_latest_version: "{{ state_attr(current_update_entity, 'latest_version') | default(state_attr(current_update_entity, 'available_version')) | default('0.0.0') }}"
                 # Parse version numbers (assuming format YYYY.MM.PP or similar)
-                installed_parts: "{{ current_installed_version.split('.') }}"
-                latest_parts: "{{ current_latest_version.split('.') }}"
+                installed_parts: "{{ (current_installed_version | string).split('.') }}"
+                latest_parts: "{{ (current_latest_version | string).split('.') }}"
                 # Determine version change type
                 version_change_type: >
                   {% if installed_parts | length > 0 and latest_parts | length > 0 and installed_parts[0] != latest_parts[0] %}
@@ -1833,8 +1833,8 @@ action:
                 current_installed_version: "{{ state_attr(current_update_entity, 'installed_version') | default('0.0.0') }}"
                 current_latest_version: "{{ state_attr(current_update_entity, 'latest_version') | default(state_attr(current_update_entity, 'available_version')) | default('0.0.0') }}"
                 # Parse version numbers (assuming format YYYY.MM.PP or similar)
-                installed_parts: "{{ current_installed_version.split('.') }}"
-                latest_parts: "{{ current_latest_version.split('.') }}"
+                installed_parts: "{{ (current_installed_version | string).split('.') }}"
+                latest_parts: "{{ (current_latest_version | string).split('.') }}"
                 # Determine version change type
                 version_change_type: >
                   {% if installed_parts | length > 0 and latest_parts | length > 0 and installed_parts[0] != latest_parts[0] %}
