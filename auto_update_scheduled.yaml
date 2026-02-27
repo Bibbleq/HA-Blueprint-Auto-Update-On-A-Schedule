@@ -1464,11 +1464,12 @@ action:
                       2. Look for breaking changes, deprecations, or changes that require manual intervention.
                       3. Consider the user's environment context when evaluating impact.
                       
-                      RESPOND WITH ONLY ONE OF THESE TWO OPTIONS:
+                      IMPORTANT - YOU MUST RESPOND WITH EXACTLY ONE OF THESE TWO OPTIONS AND NOTHING ELSE:
                       - "SAFE" if the update appears safe to install automatically
                       - "CONCERN: [brief reason]" if there are potential breaking changes or concerns
                       
-                      Be conservative - if you cannot access the release notes or are unsure, indicate concern.
+                      Your response must begin with either the word SAFE or CONCERN. Do not include any other text before this word.
+                      Be conservative - if you cannot access the release notes or are unsure, respond with "CONCERN: unable to verify release notes".
                   response_variable: ai_response
                   continue_on_error: true
                 - variables:
@@ -1485,9 +1486,9 @@ action:
                         {% set speech_data = ai_response.response.speech | default({}) %}
                         {% set plain_data = speech_data.plain | default({}) %}
                         {% set response_text = plain_data.speech | default('') | upper %}
-                        {{ 'CONCERN' in response_text }}
+                        {{ 'SAFE' not in response_text or 'CONCERN' in response_text }}
                       {% else %}
-                        false
+                        true
                       {% endif %}
                     ai_concern_reason: >
                       {% if ai_response is defined and ai_response.response is defined %}
@@ -1497,10 +1498,10 @@ action:
                         {% if 'CONCERN' in response_text | upper %}
                           {{ response_text | replace('CONCERN:', '') | replace('CONCERN', '') | trim }}
                         {% else %}
-                          {{ '' }}
+                          {{ response_text | trim }}
                         {% endif %}
                       {% else %}
-                        {{ '' }}
+                        No response received from AI agent
                       {% endif %}
                 - alias: "Log AI response for review"
                   variables:
