@@ -5,14 +5,14 @@
 
 A powerful and safe Home Assistant blueprint that automatically updates Home Assistant Core, OS, add-ons, and integrations on a scheduled basis with intelligent safety features.
 
-## 🎉 Latest Update - v2026.2.1
+## 🎉 Latest Update - v26.05.0
 
-**Versioning Correction and Repository Cleanup:**
-- **Calendar Versioning:** Corrected to proper CalVer format (YYYY.MM.incremental)
-- **Repository Organization:** Moved documentation files to `docs/` directory
-- **Consolidated Changelog:** Added root `CHANGELOG.md` following Keep a Changelog format
+**Strict CalVer and Metadata Cleanup:**
+- **Versioning:** Standardized the current release to strict CalVer format `YY.MM.PATCH`
+- **Current references:** Aligned the latest version shown in the README, blueprint, and changelog
+- **Repository metadata:** Corrected current repository URLs used for imports, issues, and blueprint source metadata
 
-**Note:** Previous versions (v2025.10.3–v2025.10.11) used a non-resetting incremental counter. Going forward, the incremental resets each calendar month.
+**Note:** Older published version labels below are preserved as historical references.
 
 ## Previous Update - v2025.10.11
 
@@ -172,11 +172,11 @@ A powerful and safe Home Assistant blueprint that automatically updates Home Ass
 1. **Via Home Assistant UI:**
    - Navigate to Settings → Automations & Scenes → Blueprints
    - Click the "Import Blueprint" button
-   - Enter the blueprint URL: `https://github.com/Bibbleq/HA-Update-Blueprint/blob/main/auto_update_scheduled.yaml`
+   - Enter the blueprint URL: `https://github.com/Bibbleq/HA-Blueprint-Auto-Update-On-A-Schedule/blob/main/auto_update_scheduled.yaml`
 
 2. **Via URL:**
    ```
-   https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https://github.com/Bibbleq/HA-Update-Blueprint/blob/main/auto_update_scheduled.yaml
+   https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https://github.com/Bibbleq/HA-Blueprint-Auto-Update-On-A-Schedule/blob/main/auto_update_scheduled.yaml
    ```
 
 ## ⚙️ Configuration
@@ -341,14 +341,14 @@ notification_mobile_device: mobile_app_my_phone
 
 For a complete version history, see [CHANGELOG.md](CHANGELOG.md) in the repository root.
 
-### v2026.2.1 (Current)
+### v26.05.0 (Current)
 
-**✅ Versioning Correction and Repository Cleanup:**
-- Corrected to proper Calendar Versioning format (YYYY.MM.incremental)
-- Moved documentation files to `docs/` directory
-- Added consolidated `CHANGELOG.md` following Keep a Changelog format
+**✅ Strict CalVer and Metadata Cleanup:**
+- Standardized the current release to strict Calendar Versioning format (`YY.MM.PATCH`)
+- Aligned current version references across the README, blueprint, and changelog
+- Corrected active repository URLs for blueprint imports and support links
 
-**Note:** Previous versions (v2025.10.3–v2025.10.11) used a non-resetting incremental counter. Going forward, the incremental resets each calendar month.
+**Note:** Older published version labels below are preserved as historical references.
 
 ### v2025.10.11
 
@@ -588,8 +588,8 @@ This is a fork/modification of the original blueprint by [edwardtfn](https://git
 - Community Discussion: https://community.home-assistant.io/t/459281
 
 ### This Fork
-- Repository: https://github.com/Bibbleq/HA-Update-Blueprint
-- Issues & Feature Requests: https://github.com/Bibbleq/HA-Update-Blueprint/issues
+- Repository: https://github.com/Bibbleq/HA-Blueprint-Auto-Update-On-A-Schedule
+- Issues & Feature Requests: https://github.com/Bibbleq/HA-Blueprint-Auto-Update-On-A-Schedule/issues
 
 ## 📚 Additional Documentation
 
@@ -620,7 +620,7 @@ This is a fork/modification of the original blueprint by [edwardtfn](https://git
 
 ## 📞 Support & Discussion
 
-- **Issues:** [GitHub Issues](https://github.com/Bibbleq/HA-Update-Blueprint/issues)
+- **Issues:** [GitHub Issues](https://github.com/Bibbleq/HA-Blueprint-Auto-Update-On-A-Schedule/issues)
 - **Original Discussion:** [Home Assistant Community Forum](https://community.home-assistant.io/t/459281)
 - **Original Repository Issues:** [edwardtfn/ha_auto_update_scheduled](https://github.com/edwardtfn/ha_auto_update_scheduled/issues)
 
@@ -635,4 +635,4 @@ If you find this blueprint useful, consider supporting the original author:
 
 ---
 
-**Last Updated:** February 2026 (v2026.2.1)
+**Last Updated:** May 2026 (v26.05.0)

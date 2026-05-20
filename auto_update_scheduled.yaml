@@ -36,18 +36,25 @@ blueprint:
 
     Update Home Assistant automatically when a new update is available.
 
-    **Current Version: v2026.2.5** - Fixed HA start no-op notification cascade outside schedule window.
+    **Current Version: v26.05.0** - Standardized the latest release to strict `YY.MM.PATCH` CalVer and aligned active repository metadata.
 
     <details>
     <summary>📋 Click to view version history and changelog</summary>
 
-    ## v2026.2.5
+    ## v26.05.0
 
     **Fixed:**
     - Added early silent exit for `homeassistant.start` when schedule is `off` and no out-of-schedule entities are pending
     - Prevents no-op notification cascades on every restart when nothing will be installed
 
+    **Changed:**
+    - Standardized the current release metadata to strict Calendar Versioning format (`YY.MM.PATCH`)
+    - Aligned the latest README, blueprint, and changelog version references
+    - Corrected active repository URLs used for blueprint support and source metadata
+
     **Migration note:** If your automation still includes the removed `update_process_started_entity` input from older versions, remove it and delete the orphaned helper entity.
+
+    **Note:** Older published version labels below are preserved as historical references.
 
     ## v2026.2.4
 
@@ -180,9 +187,9 @@ blueprint:
       - [Home Assistant Community portal](https://community.home-assistant.io/t/459281)
 
     ## For support, bug reports and new ideas:
-      - [GitHub Issues](https://github.com/edwardtfn/ha_auto_update_scheduled/issues)
+      - [GitHub Issues](https://github.com/Bibbleq/HA-Blueprint-Auto-Update-On-A-Schedule/issues)
   domain: automation
-  source_url: https://raw.githubusercontent.com/edwardtfn/ha_auto_update_scheduled/main/auto_update_scheduled.yaml
+  source_url: https://raw.githubusercontent.com/Bibbleq/HA-Blueprint-Auto-Update-On-A-Schedule/main/auto_update_scheduled.yaml
   input:
     when_section:
       name: When (Schedule, etc.)
