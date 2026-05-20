@@ -7,6 +7,15 @@ and this project uses [Calendar Versioning](https://calver.org/) with the scheme
 
 **Note:** Detailed technical changelogs for each version are available in the [`changelogs/`](changelogs/) directory. Exact release dates for versions v2025.10.3–v2025.10.11 were not preserved; these versions were released during October 2025–February 2026.
 
+## [v2026.2.5] - 2026-05-20
+
+### Fixed
+- Added an early silent exit for `homeassistant.start` runs when the schedule is `off` and no out-of-schedule entities are pending
+- Prevents no-op notification cascades on restart when nothing will be installed
+
+### Migration note
+- If your automation still includes the removed `update_process_started_entity` input from older versions, remove it and delete the orphaned helper entity
+
 ## [v2026.2.3] - 2026-02-12
 
 ### Fixed
