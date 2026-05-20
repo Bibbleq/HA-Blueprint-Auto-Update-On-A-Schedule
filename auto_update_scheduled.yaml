@@ -36,10 +36,18 @@ blueprint:
 
     Update Home Assistant automatically when a new update is available.
 
-    **Current Version: v2026.2.4** - Removed safeguard bypasses: Update-Remaining catch-all and post-reboot resume logic.
+    **Current Version: v2026.2.5** - Fixed HA start no-op notification cascade outside schedule window.
 
     <details>
     <summary>📋 Click to view version history and changelog</summary>
+
+    ## v2026.2.5
+
+    **Fixed:**
+    - Added early silent exit for `homeassistant.start` when schedule is `off` and no out-of-schedule entities are pending
+    - Prevents no-op notification cascades on every restart when nothing will be installed
+
+    **Migration note:** If your automation still includes the removed `update_process_started_entity` input from older versions, remove it and delete the orphaned helper entity.
 
     ## v2026.2.4
 
@@ -898,6 +906,7 @@ variables:
   input_notification_telegram_disable_notification: !input notification_telegram_disable_notification
   input_notification_telegram_select_notifications: !input notification_telegram_select_notifications
   input_notification_telegram_message_title: !input notification_telegram_message_title
+  input_update_out_of_schedule: !input update_out_of_schedule
   core_update_entity: >
     {% for u in integration_entities('hassio') | select('search', '^update[.]')
       if (device_attr(u, 'identifiers') | first)[1] == 'core' %}
@@ -1067,6 +1076,23 @@ action:
       update_list: '{{ updates_pending }}'
       updates_list: '{{ updates_pending }}'
       is_there_anything_to_update: '{{ updates_pending_count > 0 }}'
+
+  - alias: Exit silently on HA Start outside scheduled window
+    if:
+      - condition: template
+        value_template: "{{ trigger.platform == 'homeassistant' }}"
+      - condition: state
+        entity_id: !input schedule_entity
+        state: 'off'
+      - condition: template
+        value_template: >-
+          {{
+            expand(input_update_out_of_schedule)
+            | selectattr('state', 'eq', 'on')
+            | list | count == 0
+          }}
+    then:
+      - stop: 'HA start outside schedule window - nothing to do, exiting silently'
 
   - alias: Check person home status for mobile notification
     if:
