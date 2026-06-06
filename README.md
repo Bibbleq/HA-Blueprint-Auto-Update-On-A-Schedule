@@ -5,7 +5,7 @@
 
 A powerful and safe Home Assistant blueprint that automatically updates Home Assistant Core, OS, add-ons, and integrations on a scheduled basis with intelligent safety features.
 
-## 🎉 Latest Update - v26.05.0
+## 🎉 Latest Update - v26.06.0
 
 **Strict CalVer and Metadata Cleanup:**
 - **Versioning:** Standardized the current release to strict CalVer format `YY.MM.PATCH`
@@ -341,7 +341,7 @@ notification_mobile_device: mobile_app_my_phone
 
 For a complete version history, see [CHANGELOG.md](CHANGELOG.md) in the repository root.
 
-### v26.05.0 (Current)
+### v26.06.0 (Current)
 
 **✅ Strict CalVer and Metadata Cleanup:**
 - Standardized the current release to strict Calendar Versioning format (`YY.MM.PATCH`)
@@ -635,4 +635,4 @@ If you find this blueprint useful, consider supporting the original author:
 
 ---
 
-**Last Updated:** May 2026 (v26.05.0)
+**Last Updated:** June 2026 (v26.06.0)

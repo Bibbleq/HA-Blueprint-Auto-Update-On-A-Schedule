@@ -3,11 +3,11 @@
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
-and starting with `v26.05.0`, this project uses [Calendar Versioning](https://calver.org/) with the scheme `YY.MM.PATCH`.
+and starting with `v26.06.0`, this project uses [Calendar Versioning](https://calver.org/) with the scheme `YY.MM.PATCH`.
 
-**Note:** Detailed technical changelogs for each version are available in the [`changelogs/`](changelogs/) directory. Older published version labels are kept as historical references; the strict `YY.MM.PATCH` scheme starts with `v26.05.0`.
+**Note:** Detailed technical changelogs for each version are available in the [`changelogs/`](changelogs/) directory. Older published version labels are kept as historical references; the strict `YY.MM.PATCH` scheme starts with `v26.06.0`.
 
-## [v26.05.0] - 2026-05-20
+## [v26.06.0] - 2026-06-06
 
 ### Fixed
 - Added an early silent exit for `homeassistant.start` runs when the schedule is `off` and no out-of-schedule entities are pending
@@ -175,7 +175,7 @@ and starting with `v26.05.0`, this project uses [Calendar Versioning](https://ca
 
 ---
 
-[v26.05.0]: https://github.com/Bibbleq/HA-Blueprint-Auto-Update-On-A-Schedule/releases/tag/v26.05.0
+[v26.06.0]: https://github.com/Bibbleq/HA-Blueprint-Auto-Update-On-A-Schedule/releases/tag/v26.06.0
 [v2026.2.2]: https://github.com/Bibbleq/HA-Blueprint-Auto-Update-On-A-Schedule/releases/tag/v2026.2.2
 [v2026.2.1]: https://github.com/Bibbleq/HA-Blueprint-Auto-Update-On-A-Schedule/releases/tag/v2026.2.1
 [v2025.10.11]: https://github.com/Bibbleq/HA-Blueprint-Auto-Update-On-A-Schedule/releases/tag/v2025.10.11

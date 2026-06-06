@@ -36,12 +36,12 @@ blueprint:
 
     Update Home Assistant automatically when a new update is available.
 
-    **Current Version: v26.05.0** - Standardized the latest release to strict `YY.MM.PATCH` CalVer and aligned active repository metadata.
+    **Current Version: v26.06.0** - Standardized the latest release to strict `YY.MM.PATCH` CalVer and aligned active repository metadata.
 
     <details>
     <summary>📋 Click to view version history and changelog</summary>
 
-    ## v26.05.0
+    ## v26.06.0
 
     **Fixed:**
     - Added early silent exit for `homeassistant.start` when schedule is `off` and no out-of-schedule entities are pending
