@@ -1493,16 +1493,18 @@ action:
                       {% endif %}
                       
                       INSTRUCTIONS:
-                      1. If a release URL is provided and release notes are not available inline, please fetch and analyze the release notes from that URL.
-                      2. Look for breaking changes, deprecations, or changes that require manual intervention.
-                      3. Consider the user's environment context when evaluating impact.
+                      1. If release notes are available inline, analyze them directly.
+                      2. If a release URL is provided and release notes are not available inline, use your available web or tool access to fetch and analyze the release notes from that URL before deciding.
+                      3. If release notes are not available inline and no release URL is provided, use your available web or tool access to search for the update name and version changelog or release notes before deciding.
+                      4. Look for breaking changes, deprecations, or changes that require manual intervention.
+                      5. Consider the user's environment context when evaluating impact.
+                      6. If web or tool access is available, attempt the fetch or search before concluding that the release notes cannot be verified.
                       
-                      IMPORTANT - YOU MUST RESPOND WITH EXACTLY ONE OF THESE TWO OPTIONS AND NOTHING ELSE:
-                      - "SAFE" if the update appears safe to install automatically
-                      - "CONCERN: [brief reason]" if there are potential breaking changes or concerns
-                      
-                      Your response must begin with either the word SAFE or CONCERN. Do not include any other text before this word.
-                      Be conservative - if you cannot access the release notes or are unsure, respond with "CONCERN: unable to verify release notes".
+                      FINAL RESPONSE RULES:
+                      - You may use tools internally, but your final visible reply must be exactly one line.
+                      - Reply with "SAFE" if the update appears safe to install automatically.
+                      - Reply with "CONCERN: [brief reason]" if there are potential breaking changes or concerns.
+                      - Only reply with "CONCERN: unable to verify release notes" if you tried to fetch or search for the release notes and still could not verify them, or if no web or tool access is available.
                   response_variable: ai_response
                   continue_on_error: true
                 - variables:
