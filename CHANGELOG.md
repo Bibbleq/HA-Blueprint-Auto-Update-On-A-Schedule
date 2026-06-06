@@ -3,9 +3,9 @@
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
-and starting with `v26.06.0`, this project uses [Calendar Versioning](https://calver.org/) with the scheme `YY.MM.PATCH`.
+and starting with `v26.05.0`, this project uses [Calendar Versioning](https://calver.org/) with the scheme `YY.MM.PATCH`.
 
-**Note:** Detailed technical changelogs for each version are available in the [`changelogs/`](changelogs/) directory. Older published version labels are kept as historical references; the strict `YY.MM.PATCH` scheme starts with `v26.06.0`.
+**Note:** Detailed technical changelogs for each version are available in the [`changelogs/`](changelogs/) directory. Older published version labels are kept as historical references; the strict `YY.MM.PATCH` scheme starts with `v26.05.0`.
 
 ## [v26.06.0] - 2026-06-06
 
