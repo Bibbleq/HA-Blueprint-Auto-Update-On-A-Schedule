@@ -30,16 +30,31 @@ blueprint:
   name: Home Assistant Auto-update on a schedule base
   author: Edward Firmo (https://github.com/edwardtfn)
   homeassistant:
-    min_version: '2024.8.0'
+    min_version: '2025.8.0'
   description: |
     # Home Assistant Auto-update
 
     Update Home Assistant automatically when a new update is available.
 
-    **Current Version: v26.06.0** - Standardized the latest release to strict `YY.MM.PATCH` CalVer and aligned active repository metadata.
+    **Current Version: v26.08.0** - Added AI Task analysis with structured output and retained the Conversation Agent fallback.
 
     <details>
     <summary>📋 Click to view version history and changelog</summary>
+
+    ## v26.08.0
+
+    **Added:**
+    - Optional AI Task entity for structured release-safety analysis
+    - AI Task takes precedence when configured, enabling provider features such as web search and web fetch
+    - Existing Conversation Agent path remains available as the fallback
+
+    **Changed:**
+    - Unified SAFE / CONCERN response parsing across AI Task and Conversation Agent responses
+    - Raised the minimum Home Assistant version to 2025.8.0 for AI Task support
+
+    **Compatibility:**
+    - Existing automation instances continue to use their configured Conversation Agent until an AI Task entity is selected
+    - The existing `ai_conversation_entity` input key is unchanged
 
     ## v26.06.0
 
@@ -448,30 +463,43 @@ blueprint:
         ai_analysis_enabled:
           name: Enable AI Analysis
           description: >
-            When enabled, release notes will be sent to an AI conversation agent to analyze
+            When enabled, release notes will be sent to the configured AI Task entity, or
+            to the Conversation Agent fallback when no AI Task is selected, to analyze
             whether breaking changes might affect your specific Home Assistant environment.
-            
+
             This provides smarter breaking change detection than keyword matching alone.
             The AI will consider your environment context (if provided) when making decisions.
-            
-            Requires a configured conversation agent (e.g., Home Assistant Cloud, OpenAI, Google Generative AI, etc.)
+
+            AI Task entities can use provider capabilities such as web search or web fetch.
+            Conversation Agents remain supported for compatibility.
           default: false
           selector:
             boolean:
 
-        ai_conversation_entity:
-          name: AI Conversation Agent
+        ai_task_entity:
+          name: AI Task entity (preferred)
           description: >
-            Select the conversation agent to use for AI analysis.
-            
-            This should be a conversation entity from an AI integration such as:
-            - Home Assistant Cloud (Assist)
-            - OpenAI Conversation
-            - Google Generative AI
-            - Anthropic
-            - Local LLMs (Ollama, LocalAI, etc.)
-            
-            Leave empty to use the default conversation agent.
+            Select an AI Task entity for structured update analysis.
+
+            When configured, this path takes precedence over the Conversation Agent below.
+            Choose an AI Task whose provider has web search or web fetch enabled when you
+            want missing or linked release notes researched before a decision.
+          default: []
+          selector:
+            entity:
+              multiple: false
+              domain: ai_task
+
+        ai_conversation_entity:
+          name: AI Conversation Agent (fallback)
+          description: >
+            Select the conversation agent to use when no AI Task entity is configured.
+
+            Existing automation instances remain compatible with this path. Supported
+            integrations include Home Assistant Cloud, OpenAI Conversation, Google
+            Generative AI, Anthropic, and local LLM conversation agents.
+
+            Leave empty to use Home Assistant's default conversation agent.
           default: []
           selector:
             entity:
@@ -903,6 +931,7 @@ variables:
   input_skip_breaking_changes: !input skip_breaking_changes
   input_whatif_mode: !input whatif_mode
   input_ai_analysis_enabled: !input ai_analysis_enabled
+  input_ai_task_entity: !input ai_task_entity
   input_ai_conversation_entity: !input ai_conversation_entity
   input_ai_environment_context: !input ai_environment_context
   input_ai_skip_on_concern: !input ai_skip_on_concern
@@ -1452,12 +1481,9 @@ action:
                     log_message: "{% if input_whatif_mode %}[WHAT-IF MODE] {% endif %}Analyzing release notes with AI for `{{ current_update_entity_friendly_name }}`..."
                     notification_event: "update_progress"
                 - *logbook_update
-                - alias: "Call AI conversation agent"
-                  action: conversation.process
-                  data:
-                    agent_id: >
-                      {{ input_ai_conversation_entity if input_ai_conversation_entity | string | length > 0 else none }}
-                    text: >
+                - alias: "Build AI analysis prompt"
+                  variables:
+                    ai_analysis_prompt: >
                       You are a Home Assistant update analyzer. Your task is to determine if an update has breaking changes that could negatively affect the user's Home Assistant environment.
                       
                       {% set env_context = (input_ai_environment_context if input_ai_environment_context else '') | string %}
@@ -1505,38 +1531,64 @@ action:
                       - Reply with "SAFE" if the update appears safe to install automatically.
                       - Reply with "CONCERN: [brief reason]" if there are potential breaking changes or concerns.
                       - Only reply with "CONCERN: unable to verify release notes" if you tried to fetch or search for the release notes and still could not verify them, or if no web or tool access is available.
-                  response_variable: ai_response
-                  continue_on_error: true
+                - choose:
+                    - alias: "Use configured AI Task"
+                      conditions:
+                        - condition: template
+                          value_template: "{{ input_ai_task_entity is string and input_ai_task_entity | trim | length > 0 }}"
+                      sequence:
+                        - alias: "Call AI Task"
+                          action: ai_task.generate_data
+                          data:
+                            entity_id: "{{ input_ai_task_entity }}"
+                            task_name: "Analyze Home Assistant update safety"
+                            instructions: "{{ ai_analysis_prompt }}"
+                            structure:
+                              result:
+                                selector:
+                                  text:
+                                description: "Exactly SAFE or CONCERN: followed by a brief reason."
+                                required: true
+                          response_variable: ai_response
+                          continue_on_error: true
+                  default:
+                    - alias: "Call AI conversation agent"
+                      action: conversation.process
+                      data:
+                        agent_id: >
+                          {% if input_ai_conversation_entity is string and input_ai_conversation_entity | trim | length > 0 %}
+                            {{ input_ai_conversation_entity }}
+                          {% else %}
+                            {{ none }}
+                          {% endif %}
+                        text: "{{ ai_analysis_prompt }}"
+                      response_variable: ai_response
+                      continue_on_error: true
                 - variables:
                     ai_response_text: >
-                      {% if ai_response is defined and ai_response.response is defined %}
+                      {% if input_ai_task_entity is string and input_ai_task_entity | trim | length > 0 %}
+                        {% if ai_response is defined and ai_response.data is defined %}
+                          {{ ai_response.data.result | default('No response received') | string }}
+                        {% else %}
+                          No response received from AI Task
+                        {% endif %}
+                      {% elif ai_response is defined and ai_response.response is defined %}
                         {% set speech_data = ai_response.response.speech | default({}) %}
                         {% set plain_data = speech_data.plain | default({}) %}
                         {{ plain_data.speech | default('No response received') | string }}
                       {% else %}
                         No response received from AI agent
                       {% endif %}
+                - variables:
                     ai_has_concern: >
-                      {% if ai_response is defined and ai_response.response is defined %}
-                        {% set speech_data = ai_response.response.speech | default({}) %}
-                        {% set plain_data = speech_data.plain | default({}) %}
-                        {% set response_text = plain_data.speech | default('') | upper %}
-                        {{ 'SAFE' not in response_text or 'CONCERN' in response_text }}
-                      {% else %}
-                        true
-                      {% endif %}
+                      {% set response_text = ai_response_text | default('') | upper %}
+                      {{ 'SAFE' not in response_text or 'CONCERN' in response_text }}
                     ai_concern_reason: >
-                      {% if ai_response is defined and ai_response.response is defined %}
-                        {% set speech_data = ai_response.response.speech | default({}) %}
-                        {% set plain_data = speech_data.plain | default({}) %}
-                        {% set response_text = plain_data.speech | default('') %}
-                        {% if 'CONCERN' in response_text | upper %}
-                          {{ response_text | replace('CONCERN:', '') | replace('CONCERN', '') | trim }}
-                        {% else %}
-                          {{ response_text | trim }}
-                        {% endif %}
+                      {% set response_text = ai_response_text | default('') | string %}
+                      {% if 'CONCERN' in response_text | upper %}
+                        {{ response_text | replace('CONCERN:', '') | replace('CONCERN', '') | trim }}
                       {% else %}
-                        No response received from AI agent
+                        {{ response_text | trim }}
                       {% endif %}
                 - alias: "Log AI response for review"
                   variables:

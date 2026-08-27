@@ -1,16 +1,17 @@
 # Home Assistant Auto-Update Blueprint
 
-[![Home Assistant](https://img.shields.io/badge/Home%20Assistant-2024.8.0+-blue.svg)](https://www.home-assistant.io/)
+[![Home Assistant](https://img.shields.io/badge/Home%20Assistant-2025.8.0+-blue.svg)](https://www.home-assistant.io/)
 [![Blueprint](https://img.shields.io/badge/Blueprint-YAML-orange.svg)](https://www.home-assistant.io/docs/automation/using_blueprints/)
 
 A powerful and safe Home Assistant blueprint that automatically updates Home Assistant Core, OS, add-ons, and integrations on a scheduled basis with intelligent safety features.
 
-## 🎉 Latest Update - v26.06.0
+## 🎉 Latest Update - v26.08.0
 
-**Strict CalVer and Metadata Cleanup:**
-- **Versioning:** Standardized the current release to strict CalVer format `YY.MM.PATCH`
-- **Current references:** Aligned the latest version shown in the README, blueprint, and changelog
-- **Repository metadata:** Corrected current repository URLs used for imports, issues, and blueprint source metadata
+**AI Task analysis with Conversation compatibility:**
+- **AI Task:** Optional typed `ai_task` entity path with structured SAFE / CONCERN output
+- **Web research:** Use an AI Task provider with web search or web fetch enabled to investigate linked or missing release notes
+- **Compatibility:** Existing `conversation` agents remain supported and are used whenever no AI Task is selected
+- **Priority:** When both are configured, AI Task is used
 
 **Note:** Older published version labels below are preserved as historical references.
 
@@ -207,7 +208,8 @@ person_home_entity: person.john_doe   # Only update when John is home
 
 # AI Analysis (optional)
 ai_analysis_enabled: true             # Enable AI-powered breaking changes analysis
-ai_conversation_entity: conversation.openai  # Your AI conversation agent
+ai_task_entity: ai_task.my_ai_task    # Preferred; can provide web search / web fetch
+ai_conversation_entity: conversation.openai  # Fallback; existing configs remain valid
 ai_environment_context: "I use Z-Wave JS, Zigbee2MQTT, and HACS. Critical automations depend on climate integration and Google Home."
 ai_skip_on_concern: true              # Skip updates when AI flags concerns
 
@@ -312,7 +314,9 @@ notification_mobile_device: mobile_app_my_phone
 skip_breaking_changes: true
 backup_bool: true
 ai_analysis_enabled: true
-ai_conversation_entity: conversation.google_generative_ai
+ai_task_entity: ai_task.google_generative_ai
+# Optional fallback for installations without AI Task:
+# ai_conversation_entity: conversation.google_generative_ai
 ai_environment_context: |
   My Home Assistant setup includes:
   - Z-Wave JS for smart locks and sensors
@@ -341,7 +345,16 @@ notification_mobile_device: mobile_app_my_phone
 
 For a complete version history, see [CHANGELOG.md](CHANGELOG.md) in the repository root.
 
-### v26.06.0 (Current)
+### v26.08.0 (Current)
+
+**🤖 AI Task analysis with backward compatibility:**
+- Added an optional AI Task selector and `ai_task.generate_data` execution path
+- AI Task uses structured output and takes precedence when configured
+- Retained the existing Conversation Agent input and execution path as the fallback
+- Unified SAFE / CONCERN parsing across both response formats
+- Raised the minimum Home Assistant version to 2025.8.0
+
+### v26.06.0
 
 **✅ Strict CalVer and Metadata Cleanup:**
 - Standardized the current release to strict Calendar Versioning format (`YY.MM.PATCH`)
@@ -563,7 +576,8 @@ All changes maintain backward compatibility except for the `skip_breaking_change
 ### Scenario 5: AI Analysis Testing
 **Setup:**
 - `ai_analysis_enabled`: true
-- `ai_conversation_entity`: Configured conversation agent
+- `ai_task_entity`: Configured AI Task entity (preferred), or
+- `ai_conversation_entity`: Configured Conversation Agent fallback
 - `ai_environment_context`: "I use Z-Wave JS and climate integration"
 - `ai_skip_on_concern`: true
 - Update available with release notes mentioning Z-Wave changes
@@ -614,7 +628,8 @@ This is a fork/modification of the original blueprint by [edwardtfn](https://git
 - Network interruptions during updates can cause issues
 - Restart timing may vary depending on system performance
 - Mobile notifications sent 15 seconds before reboot may not always deliver in time on slower networks
-- AI Analysis requires a configured conversation agent in Home Assistant
+- AI Analysis requires either an AI Task entity or a Conversation Agent in Home Assistant
+- Web research depends on the selected AI Task provider having web search or web fetch enabled
 - AI Analysis quality depends on the AI model and the quality of release notes
 - AI responses may vary; conservative settings are recommended for production
 
@@ -635,4 +650,4 @@ If you find this blueprint useful, consider supporting the original author:
 
 ---
 
-**Last Updated:** June 2026 (v26.06.0)
+**Last Updated:** August 2026 (v26.08.0)
