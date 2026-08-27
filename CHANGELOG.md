@@ -7,6 +7,21 @@ and starting with `v26.05.0`, this project uses [Calendar Versioning](https://ca
 
 **Note:** Detailed technical changelogs for each version are available in the [`changelogs/`](changelogs/) directory. Older published version labels are kept as historical references; the strict `YY.MM.PATCH` scheme starts with `v26.05.0`.
 
+## [v26.08.0] - 2026-08-27
+
+### Added
+- Added an optional typed `ai_task_entity` input for structured AI update analysis
+- AI Tasks can use provider capabilities such as web search or web fetch to research linked or missing release notes
+
+### Changed
+- AI Task is preferred when configured; the existing Conversation Agent remains the automatic fallback
+- Both AI paths now share the same analysis prompt and normalized SAFE / CONCERN parsing
+- Raised the minimum Home Assistant version to 2025.8.0 for AI Task support
+
+### Compatibility
+- Existing automations keep working without changes because `ai_conversation_entity` is unchanged
+- Users can configure either path, or configure both for AI Task-first behavior
+
 ## [v26.06.0] - 2026-06-06
 
 ### Fixed
@@ -175,6 +190,7 @@ and starting with `v26.05.0`, this project uses [Calendar Versioning](https://ca
 
 ---
 
+[v26.08.0]: https://github.com/Bibbleq/HA-Blueprint-Auto-Update-On-A-Schedule/releases/tag/v26.08.0
 [v26.06.0]: https://github.com/Bibbleq/HA-Blueprint-Auto-Update-On-A-Schedule/releases/tag/v26.06.0
 [v2026.2.2]: https://github.com/Bibbleq/HA-Blueprint-Auto-Update-On-A-Schedule/releases/tag/v2026.2.2
 [v2026.2.1]: https://github.com/Bibbleq/HA-Blueprint-Auto-Update-On-A-Schedule/releases/tag/v2026.2.1
